@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>$HOOD Analytics</title>
+    <link rel="stylesheet" href="styles.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+    <div class="container">
+        <h1>$HOOD Shareholder Analytics</h1>
+        
+        <div class="calculator">    
+            <div class="input-group">
+                <label for="shares">Number of shares you own:</label>
+                <input type="number" id="shares" name="shares" min="0" max="909241619" value="1" placeholder="Enter number of shares">
+            </div>
+            
+            <div id="error" class="error"></div>
+            
+            <div id="results" class="results">
+                <h1>Q1 2025</h1>
+                <div class="result-item">
+                    <h2>Diluted Ownership</h2>
+                    <p id="diluted-result">-</p>
+                    <div class="chart-container">
+                        <canvas id="ownershipChart"></canvas>
+                    </div>
+                </div>
+                <div class="result-item">
+                    <h2>Diluted Earnings Per Share</h2>
+                    <p id="eps-result">-</p>
+                </div>
+            </div>
+
+            <div class="source">
+                <h3>Source</h3>
+                <p>Robinhood's Q1 2025 10-K filing:</p>
+                <ul>
+                    <li>Diluted Shares: 909,241,619</li>
+                    <li>Diluted EPS: $0.37</li>
+                </ul>
+                <p class="source-link">Source: <a href="https://investors.robinhood.com/node/13536/html" target="_blank">Robinhood Investor Relations</a></p>
+            </div>
+        </div>
+    </div>
+    <script src="script.js"></script>
+</body>
+</html> 
