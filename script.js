@@ -7,9 +7,17 @@ const sharesInput = document.getElementById('shares');
 const errorDiv = document.getElementById('error');
 const dilutedResult = document.getElementById('diluted-result');
 const epsResult = document.getElementById('eps-result');
+const downloadButton = document.getElementById('download');
 
 // Initialize chart
 let ownershipChart = null;
+
+// Current calculation results
+let currentMetrics = {
+    shares: 0,
+    diluted: 0,
+    eps: 0
+};
 
 // Helper function to format percentage with 6 decimal places
 function formatPercentage(value) {
@@ -19,6 +27,17 @@ function formatPercentage(value) {
 // Helper function to format currency
 function formatCurrency(value) {
     return '$' + value.toFixed(2);
+}
+
+// Helper function to format number with commas
+function formatNumber(number) {
+    return number.toLocaleString();
+}
+
+// Helper function to get current date and time
+function getCurrentDateTime() {
+    const now = new Date();
+    return now.toLocaleString();
 }
 
 // Helper function to validate input
@@ -52,6 +71,13 @@ function validateInput(shares) {
 function calculateMetrics(shares) {
     const dilutedPercentage = (shares / DILUTED_SHARES) * 100;
     const annualEPS = shares * DILUTED_EPS;
+    
+    // Store current results
+    currentMetrics = {
+        shares: shares,
+        diluted: dilutedPercentage,
+        eps: annualEPS
+    };
     
     return {
         diluted: dilutedPercentage,
@@ -126,6 +152,65 @@ function updateChart(percentage) {
     }
 }
 
+// Generate and download PDF report
+function downloadReport() {
+    // Initialize jsPDF
+    const { jsPDF } = window.jspdf;
+    const doc = new jsPDF();
+    
+    // Set font sizes
+    const titleSize = 16;
+    const headingSize = 14;
+    const normalSize = 12;
+    
+    // Add title
+    doc.setFontSize(titleSize);
+    doc.text('Robinhood ($HOOD) Ownership Report', 20, 20);
+    
+    // Add generation date
+    doc.setFontSize(normalSize);
+    doc.text(`Generated: ${getCurrentDateTime()}`, 20, 30);
+
+    // Draw a line
+    doc.setLineWidth(0.5);
+    doc.line(20, 35, 190, 35);
+    
+    // Add Q1 2025 Analysis section
+    doc.setFontSize(headingSize);
+    doc.text('Q1 2025 Analysis', 20, 45);
+    doc.setFontSize(normalSize);
+    doc.text([
+        `Shares Owned: ${formatNumber(currentMetrics.shares)}`,
+        `Diluted Ownership: ${formatPercentage(currentMetrics.diluted)}`,
+        `Annual EPS: ${formatCurrency(currentMetrics.eps)}`
+    ], 20, 55);
+
+    // Draw a line
+    doc.line(20, 75, 190, 75);
+    
+    // Add Company Data section
+    doc.setFontSize(headingSize);
+    doc.text('Company Data', 20, 85);
+    doc.setFontSize(normalSize);
+    doc.text([
+        `Total Diluted Shares: ${formatNumber(DILUTED_SHARES)}`,
+        `Diluted EPS: ${formatCurrency(DILUTED_EPS)}`
+    ], 20, 95);
+
+    // Draw a line
+    doc.line(20, 105, 190, 105);
+    
+    // Add source information
+    doc.setFontSize(normalSize);
+    doc.text('Source: Robinhood Q1 2025 10-K Filing', 20, 115);
+    doc.setTextColor(0, 0, 255);
+    doc.text('https://investors.robinhood.com/node/13536/html', 20, 122);
+    
+    // Save the PDF
+    const date = new Date().toISOString().split('T')[0];
+    doc.save(`hood-ownership-${date}.pdf`);
+}
+
 // Handle the calculation
 function handleCalculate() {
     // Clear previous error
@@ -150,8 +235,9 @@ function handleCalculate() {
     }
 }
 
-// Event listener for input changes
+// Event listeners
 sharesInput.addEventListener('input', handleCalculate);
+downloadButton.addEventListener('click', downloadReport);
 
 // Calculate initial values
 handleCalculate(); 

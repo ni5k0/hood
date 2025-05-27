@@ -6,10 +6,14 @@
     <title>$HOOD Analytics</title>
     <link rel="stylesheet" href="styles.css">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 </head>
 <body>
     <div class="container">
-        <h1>$HOOD Shareholder Analytics</h1>
+        <div class="header">
+            <h1>$HOOD Shareholder Analytics</h1>
+        </div>
         
         <div class="calculator">    
             <div class="input-group">
@@ -42,6 +46,12 @@
                     <li>Diluted EPS: $0.37</li>
                 </ul>
                 <p class="source-link">Source: <a href="https://investors.robinhood.com/node/13536/html" target="_blank">Robinhood Investor Relations</a></p>
+            </div>
+            <div class="report">
+                <button id="download" class="download-button">
+                    <i class="fas fa-download"></i>
+                    Download PDF Report
+                </button>
             </div>
         </div>
     </div>
